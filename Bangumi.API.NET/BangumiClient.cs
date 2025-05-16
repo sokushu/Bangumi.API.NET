@@ -21,10 +21,10 @@
 //SOFTWARE.
 using Bangumi.API.NET.Exceptions;
 using Bangumi.API.NET.Requests.Abstractions;
-using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using static Bangumi.API.NET.IBangumiClient;
@@ -37,6 +37,8 @@ namespace Bangumi.API.NET
 
         private HttpClient HttpClient { get; }
 
+        private HttpClientHandler HttpClientHandler { get; }
+
         private BangumiAPIOptions? Options { get; }
 
         private readonly CancellationTokenSource CancellationTokenSource;
@@ -48,15 +50,19 @@ namespace Bangumi.API.NET
         {
             Options = options;
 
-            var httpclientHandler = new HttpClientHandler()
+            HttpClientHandler = new HttpClientHandler()
             {
                 AllowAutoRedirect = false,
+                AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+                UseCookies = true,
             };
 
-            HttpClient = new HttpClient(httpclientHandler)
+            HttpClient = new HttpClient(HttpClientHandler)
             {
                 Timeout = Timeout,
             };
+
+            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", string.Empty);
 
             string baseAddress;
             string userAgent;
@@ -132,6 +138,30 @@ namespace Bangumi.API.NET
                 requestMessage?.Dispose();
                 httpRequestMessage.Dispose();
             }
+        }
+
+        public async Task GetAccessToken(BangumiAPIAccessTokenOptions bangumiAPIAccessTokenOptions)
+        {
+            if (bangumiAPIAccessTokenOptions == null)
+                throw new ArgumentNullException(nameof(bangumiAPIAccessTokenOptions));
+            if (string.IsNullOrEmpty(bangumiAPIAccessTokenOptions.Email))
+                throw new ArgumentNullException(nameof(bangumiAPIAccessTokenOptions.Email));
+            if (string.IsNullOrEmpty(bangumiAPIAccessTokenOptions.Password))
+                throw new ArgumentNullException(nameof(bangumiAPIAccessTokenOptions.Password));
+
+            string code;
+            using (var listener = new HttpListener())
+            {
+                int port = new Random().Next(30000, 65535);
+                listener.Prefixes.Add($"http://0.0.0.0:{port}/");
+                listener.Start();
+                var context = await listener.GetContextAsync();
+                code = context.Request.QueryString.Get("code");
+                if (string.IsNullOrEmpty(code))
+                    throw new Exception("Authorization code is missing.");
+            }
+
+            var accessToken = await SendRequest<string>(null!);
         }
     }
 }

@@ -20,25 +20,14 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 using System;
-using System.Threading.Tasks;
-using System.Threading;
-using Bangumi.API.NET.Requests.Abstractions;
-using System.Net.Http;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Bangumi.API.NET
 {
-    public interface IBangumiClient
+    public class BangumiAPIAccessTokenOptions
     {
-        public delegate Task AsyncEventHandler<TEventArgs>(object sender, TEventArgs e);
-
-        public event AsyncEventHandler<HttpRequestMessage>? SendingRequest;
-
-        public event AsyncEventHandler<HttpResponseMessage>? ReceivedResponse;
-
-        public TimeSpan Timeout { get; set; }
-
-        public Task GetAccessToken(BangumiAPIAccessTokenOptions bangumiAPIAccessTokenOptions);
-
-        public Task<TResponse> SendRequest<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default);
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
     }
 }
