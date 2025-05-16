@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <Nullable>enable</Nullable>
     <IncrementVersionOnBuild>3.0.2.+</IncrementVersionOnBuild>
-    <Version>3.0.2.31</Version>
+    <Version>3.0.2.35</Version>
   </PropertyGroup>
 
   <ItemGroup>
