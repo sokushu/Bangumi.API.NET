@@ -148,20 +148,44 @@ namespace Bangumi.API.NET
                 throw new ArgumentNullException(nameof(bangumiAPIAccessTokenOptions.Email));
             if (string.IsNullOrEmpty(bangumiAPIAccessTokenOptions.Password))
                 throw new ArgumentNullException(nameof(bangumiAPIAccessTokenOptions.Password));
+            if (string.IsNullOrEmpty(bangumiAPIAccessTokenOptions.ListenUrl))
+                throw new ArgumentNullException(nameof(bangumiAPIAccessTokenOptions.ListenUrl));
 
-            string code;
-            using (var listener = new HttpListener())
+            // GET https://bgm.tv/oauth/authorize
+            //client_id   string App ID 注册应用时获取	☑️
+            //response_type   string 验证类型    目前仅支持 code	☑️
+            //redirect_uri    string 回调 URL 在后台设置的回调地址
+            //scope   string 请求权限    尚未实现
+            //state   string 随机参数    随机生产的参数，便于开发者防止跨站攻击
+            using (var httpClient = new HttpClient(new HttpClientHandler()
             {
-                int port = new Random().Next(30000, 65535);
-                listener.Prefixes.Add($"http://0.0.0.0:{port}/");
-                listener.Start();
-                var context = await listener.GetContextAsync();
-                code = context.Request.QueryString.Get("code");
-                if (string.IsNullOrEmpty(code))
-                    throw new Exception("Authorization code is missing.");
-            }
 
-            var accessToken = await SendRequest<string>(null!);
+            })
+            {
+
+            })
+            {
+                var httprequest = new HttpRequestMessage(HttpMethod.Get, "https://bgm.tv/oauth/authorize");
+                var content = new MultipartFormDataContent
+                {
+                    { new StringContent("client_id"), "client_id" }
+                };
+
+                //httprequest.Content = new MultipartFormDataContent()
+                //await httpClient.SendAsync();
+
+
+                string code;
+                using (var listener = new HttpListener())
+                {
+                    listener.Prefixes.Add(bangumiAPIAccessTokenOptions.ListenUrl);
+                    listener.Start();
+                    var context = await listener.GetContextAsync();
+                    code = context.Request.QueryString.Get("code");
+                    if (string.IsNullOrEmpty(code))
+                        throw new Exception("Authorization code is missing.");
+                }
+            }
         }
     }
 }

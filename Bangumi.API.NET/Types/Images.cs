@@ -21,16 +21,34 @@
 //SOFTWARE.
 namespace Bangumi.API.NET.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Images
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public string Large { get; set; } = string.Empty;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Common { get; set; } = string.Empty;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Medium { get; set; } = string.Empty;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Small { get; set; } = string.Empty;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public string Grid { get; set; } = string.Empty;
     }
 }
