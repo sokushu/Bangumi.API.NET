@@ -19,6 +19,8 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
+using System;
+
 namespace Bangumi.API.NET
 {
     public class BangumiAPIAccessTokenOptions
@@ -27,5 +29,16 @@ namespace Bangumi.API.NET
         public string Password { get; set; } = string.Empty;
 
         public string ListenUrl { get; set; } = string.Empty;
+
+        public string ClientId { get; set; } = string.Empty;
+
+        public string ResponseType { get; set; } = "code";
+
+        public string? RedirectUri { get; set; } 
+
+        [Obsolete("API 尚未实现 请求权限")]
+        public string? Scope { get => throw new NotImplementedException("API 尚未实现 请求权限"); set => throw new NotImplementedException("API 尚未实现 请求权限"); }
+
+        public string? State { get; set; }
     }
 }

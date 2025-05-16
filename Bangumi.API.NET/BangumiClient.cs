@@ -21,10 +21,14 @@
 //SOFTWARE.
 using Bangumi.API.NET.Exceptions;
 using Bangumi.API.NET.Requests.Abstractions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Data.Common;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using static Bangumi.API.NET.IBangumiClient;
@@ -150,6 +154,10 @@ namespace Bangumi.API.NET
                 throw new ArgumentNullException(nameof(bangumiAPIAccessTokenOptions.Password));
             if (string.IsNullOrEmpty(bangumiAPIAccessTokenOptions.ListenUrl))
                 throw new ArgumentNullException(nameof(bangumiAPIAccessTokenOptions.ListenUrl));
+            if (string.IsNullOrEmpty(bangumiAPIAccessTokenOptions.ClientId))
+                throw new ArgumentNullException(nameof(bangumiAPIAccessTokenOptions.ClientId));
+            if (string.IsNullOrEmpty(bangumiAPIAccessTokenOptions.ResponseType))
+                throw new ArgumentNullException(nameof(bangumiAPIAccessTokenOptions.ResponseType));
 
             // GET https://bgm.tv/oauth/authorize
             //client_id   string App ID 注册应用时获取	☑️
@@ -157,6 +165,23 @@ namespace Bangumi.API.NET
             //redirect_uri    string 回调 URL 在后台设置的回调地址
             //scope   string 请求权限    尚未实现
             //state   string 随机参数    随机生产的参数，便于开发者防止跨站攻击
+
+            //POST https://bgm.tv/oauth/access_token
+            //Parameter Type    Desc Note    Required
+            //grant_type  string 授权方式    此处应使用 authorization_code	☑️
+            //client_id   string App ID 注册应用时获取	☑️
+            //client_secret   string App Secret 注册应用时获取	☑️
+            //code    string 验证代码    回调获取的 code	☑️
+            //redirect_uri    string 回调 URL 在后台设置的回调地址	☑️
+            //state   string 随机参数    随机生产的参数，便于开发者防止跨站攻击
+
+            //POST https://bgm.tv/oauth/access_token
+            //Parameter Type    Desc Note    Required
+            //grant_type  string 授权方式    此处应使用 refresh_token	☑️
+            //client_id   string App ID 注册应用时获取	☑️
+            //client_secret   string App Secret 注册应用时获取	☑️
+            //refresh_token   string Refresh Token 之前获取的 refresh token	☑️
+            //redirect_uri    string 回调 URL 在后台设置的回调地址	☑️
             using (var httpClient = new HttpClient(new HttpClientHandler()
             {
 
