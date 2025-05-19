@@ -29,5 +29,6 @@ namespace Bangumi.API.NET
     {
         public string BaseURL { get; set; } = "https://api.bgm.tv/";
         public string? UserAgent { get; set; }
+        public bool AllowAutoRedirect { get; set; } = true;
     }
 }

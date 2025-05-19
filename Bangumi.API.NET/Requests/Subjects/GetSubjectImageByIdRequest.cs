@@ -22,17 +22,28 @@
 using Bangumi.API.NET.Requests.Abstractions;
 using Bangumi.API.NET.Types;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Bangumi.API.NET.Requests.Subjects
 {
     public class GetSubjectImageByIdRequest : RequestBase<string>
     {
-        public GetSubjectImageByIdRequest(SubjectID subjectID, ImagesType imageType) : base($"subjects/{subjectID}/image", HttpMethod.Get) =>
+        [JsonIgnore]
+        private readonly Encoding _encoding = Encoding.UTF8;
+
+        public GetSubjectImageByIdRequest(SubjectID subjectID, ImagesType imageType, Encoding? encoding = null) : base($"subjects/{subjectID}/image", HttpMethod.Get)
+        {
             ImageType = imageType;
+            if (encoding != null)
+                _encoding = encoding;
+        }
 
         [JsonIgnore]
         public ImagesType ImageType { get; set; }
@@ -42,8 +53,18 @@ namespace Bangumi.API.NET.Requests.Subjects
 
         public override async Task<string> ParseResponse(HttpResponseMessage httpResponseMessage)
         {
-            var url = httpResponseMessage.Headers.Location.ToString();
-            return await Task.FromResult(url ?? string.Empty);
+            if (httpResponseMessage.StatusCode == HttpStatusCode.OK)
+            {
+                StreamReader streamReader = new StreamReader(await httpResponseMessage.Content.ReadAsStreamAsync(), _encoding);
+                return await streamReader.ReadToEndAsync();
+            }
+            else if (httpResponseMessage.StatusCode == HttpStatusCode.Moved || httpResponseMessage.StatusCode == HttpStatusCode.MovedPermanently
+                || httpResponseMessage.StatusCode == HttpStatusCode.Found || httpResponseMessage.StatusCode == HttpStatusCode.Redirect)
+            {
+                var url = httpResponseMessage.Headers.Location.ToString();
+                return url;
+            }
+            throw new Exception(MethodName + " failed: " + httpResponseMessage.StatusCode.ToString());
         }
     }
 }

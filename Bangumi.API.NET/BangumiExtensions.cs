@@ -25,6 +25,7 @@ using Bangumi.API.NET.Requests.Subjects;
 using Bangumi.API.NET.Responses;
 using Bangumi.API.NET.Types;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Bangumi.API.NET
@@ -135,14 +136,18 @@ namespace Bangumi.API.NET
             await bangumiClient.ThrowIfNull().SendRequest(new GetSubjectByIdRequest(subjectID));
 
         /// <summary>
-        /// 
+        /// 获取条目图片
         /// </summary>
+        /// <remarks>
+        /// 获取URL地址，或者获取通过Encoding编码后的图片数据
+        /// </remarks>
         /// <param name="bangumiClient"></param>
         /// <param name="subjectID"></param>
         /// <param name="imageType"></param>
+        /// <param name="encoding"></param>
         /// <returns></returns>
-        public static async Task<string> GetSubjectImageById(this IBangumiClient bangumiClient, SubjectID subjectID, ImagesType imageType) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetSubjectImageByIdRequest(subjectID, imageType));
+        public static async Task<string> GetSubjectImageById(this IBangumiClient bangumiClient, SubjectID subjectID, ImagesType imageType, Encoding encoding) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetSubjectImageByIdRequest(subjectID, imageType, encoding));
 
         /// <summary>
         /// 
