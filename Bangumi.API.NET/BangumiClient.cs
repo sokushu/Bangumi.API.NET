@@ -21,14 +21,10 @@
 //SOFTWARE.
 using Bangumi.API.NET.Exceptions;
 using Bangumi.API.NET.Requests.Abstractions;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Data.Common;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using static Bangumi.API.NET.IBangumiClient;

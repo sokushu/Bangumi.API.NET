@@ -21,12 +21,15 @@
 //SOFTWARE.
 namespace Bangumi.API.NET.Types
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Avatar
     {
-        public string Large { get; set; }
+        public string? Large { get; set; }
 
-        public string Medium { get; set; }
+        public string? Medium { get; set; }
 
-        public string Small { get; set; }
+        public string? Small { get; set; }
     }
 }
