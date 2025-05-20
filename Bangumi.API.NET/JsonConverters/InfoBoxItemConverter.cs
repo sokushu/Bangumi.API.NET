@@ -52,6 +52,21 @@ namespace Bangumi.API.NET.JsonConverters
                 return (InfoboxItem)(reader.Value?.ToString() ?? string.Empty);
             }
         }
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer) => throw new NotImplementedException();
+        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
+        {
+            if (value is InfoboxItem item)
+            {
+                writer.WriteStartArray();
+                foreach (var i in item.Items)
+                {
+                    serializer.Serialize(writer, i);
+                }
+                writer.WriteEndArray();
+            }
+            else
+            {
+                writer.WriteValue(value?.ToString());
+            }
+        }
     }
 }
