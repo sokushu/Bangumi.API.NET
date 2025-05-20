@@ -74,7 +74,7 @@ namespace Bangumi.API.NET
             CancellationTokenSource = new CancellationTokenSource();
         }
 
-        public async Task<TResponse> SendRequest<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+        public virtual async Task<TResponse> SendRequest<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
             if (request == null)
                 throw new ArgumentNullException(nameof(request));
