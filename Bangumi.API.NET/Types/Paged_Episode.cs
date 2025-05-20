@@ -19,19 +19,14 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
-using Bangumi.API.NET.Requests.Abstractions;
-using Bangumi.API.NET.Types;
-using Newtonsoft.Json;
-using System.Net.Http;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace Bangumi.API.NET.Requests.Search
+namespace Bangumi.API.NET.Types
 {
-    public class SearchCharactersRequest : PagedRequestBase<Paged_Character>
+    public class Paged_Episode : PagedBase<Episode>
     {
-        public SearchCharactersRequest(string keywords) : base("search/characters", HttpMethod.Post) =>
-            Keywords = keywords;
 
-        [JsonProperty("keyword")]
-        public string Keywords { get; set; }
     }
 }

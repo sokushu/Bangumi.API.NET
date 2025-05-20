@@ -24,7 +24,6 @@ using Bangumi.API.NET.Requests.Abstractions;
 using System;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using static Bangumi.API.NET.IBangumiClient;
@@ -52,9 +51,10 @@ namespace Bangumi.API.NET
 
             HttpClientHandler = new HttpClientHandler()
             {
-                AllowAutoRedirect = false,
+                AllowAutoRedirect = Options?.AllowAutoRedirect ?? false,
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
-                UseCookies = true,
+                UseCookies = Options?.UseCookie ?? true,
+                CookieContainer = new CookieContainer(),
             };
 
             HttpClient = new HttpClient(HttpClientHandler)
@@ -62,7 +62,7 @@ namespace Bangumi.API.NET
                 Timeout = Timeout,
             };
 
-            HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", string.Empty);
+            // HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", string.Empty);
 
             string baseAddress;
             string userAgent;

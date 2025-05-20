@@ -21,17 +21,14 @@
 //SOFTWARE.
 using Bangumi.API.NET.Requests.Abstractions;
 using Bangumi.API.NET.Types;
-using Newtonsoft.Json;
 using System.Net.Http;
 
-namespace Bangumi.API.NET.Requests.Search
+namespace Bangumi.API.NET.Requests.Subjects
 {
-    public class SearchCharactersRequest : PagedRequestBase<Paged_Character>
+    public class GetRelatedSubjectsBySubjectIdRequest : RequestBase<string>
     {
-        public SearchCharactersRequest(string keywords) : base("search/characters", HttpMethod.Post) =>
-            Keywords = keywords;
-
-        [JsonProperty("keyword")]
-        public string Keywords { get; set; }
+        public GetRelatedSubjectsBySubjectIdRequest(SubjectID subject_id) : base($"subjects/{subject_id}/subjects", HttpMethod.Get)
+        {
+        }
     }
 }

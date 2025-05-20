@@ -24,17 +24,17 @@ namespace Bangumi.API.NET.Types
     public class CharacterPerson
     {
         public int ID { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public CharacterType Type { get; set; }
-        public PersonImages Images { get; set; }
+        public PersonImages? Images { get; set; }
         public SubjectID SubjectID { get; set; }
 
         public SubjectType SubjectType { get; set; }
 
-        public string SubjectName { get; set; }
+        public string? SubjectName { get; set; }
 
-        public string SubjectNameCN { get; set; }
+        public string? SubjectNameCN { get; set; }
 
-        public string Staff { get; set; }
+        public string? Staff { get; set; }
     }
 }

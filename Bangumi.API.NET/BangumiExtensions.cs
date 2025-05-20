@@ -20,6 +20,8 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 using Bangumi.API.NET.Requests;
+using Bangumi.API.NET.Requests.Characters;
+using Bangumi.API.NET.Requests.Episodes;
 using Bangumi.API.NET.Requests.Search;
 using Bangumi.API.NET.Requests.Subjects;
 using Bangumi.API.NET.Responses;
@@ -146,7 +148,7 @@ namespace Bangumi.API.NET
         /// <param name="imageType"></param>
         /// <param name="encoding"></param>
         /// <returns></returns>
-        public static async Task<string> GetSubjectImageById(this IBangumiClient bangumiClient, SubjectID subjectID, ImagesType imageType, Encoding encoding) =>
+        public static async Task<string> GetSubjectImageById(this IBangumiClient bangumiClient, SubjectID subjectID, ImagesType imageType, Encoding? encoding = null) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetSubjectImageByIdRequest(subjectID, imageType, encoding));
 
         /// <summary>
@@ -172,40 +174,49 @@ namespace Bangumi.API.NET
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetRelatedSubjectsBySubjectId(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task GetRelatedSubjectsBySubjectId(this IBangumiClient bangumiClient, SubjectID subjectID) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetRelatedSubjectsBySubjectIdRequest(subjectID));
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetEpisodes(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task<Paged_Episode> GetEpisodes(this IBangumiClient bangumiClient, SubjectID subjectID, EpType? epType = null, int? limit = null, int? offset = null) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetEpisodesRequest(subjectID)
+            {
+                Type = epType,
+                Limit = limit,
+                Offset = offset,
+            });
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetEpisodeById(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task<Episode> GetEpisodeById(this IBangumiClient bangumiClient, int episode_id) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetEpisodeByIdRequest(episode_id));
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetCharacterById(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task<Character> GetCharacterById(this IBangumiClient bangumiClient, int character_id) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCharacterByIdRequest(character_id));
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetCharacterImageById(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task GetCharacterImageById(this IBangumiClient bangumiClient, int character_id, ImagesType? imagesType = null, Encoding? encoding = null) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCharacterImageByIdRequest(character_id)
+            {
+                Type = imagesType,
+                Encoding = encoding ?? Encoding.UTF8,
+            });
 
         /// <summary>
         /// 

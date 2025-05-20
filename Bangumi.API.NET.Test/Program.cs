@@ -32,10 +32,8 @@ internal class Program
         });
         bangumiClient.ReceivedResponse += BangumiClient_ReceivedResponse;
 
-        var result001 = await bangumiClient.GetSubjectById(123456);
+        var result001 = await bangumiClient.GetEpisodes(123456);
         var result002 = await bangumiClient.GetSubjectImageById(123456, ImagesType.Common);
-
-        await bangumiClient.GetEpisodeById();
     }
 
     private static async Task BangumiClient_ReceivedResponse(object? sender, HttpResponseMessage e)

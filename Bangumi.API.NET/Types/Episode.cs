@@ -19,19 +19,49 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
-using Bangumi.API.NET.Requests.Abstractions;
-using Bangumi.API.NET.Types;
 using Newtonsoft.Json;
-using System.Net.Http;
 
-namespace Bangumi.API.NET.Requests.Search
+namespace Bangumi.API.NET.Types
 {
-    public class SearchCharactersRequest : PagedRequestBase<Paged_Character>
+    public class Episode
     {
-        public SearchCharactersRequest(string keywords) : base("search/characters", HttpMethod.Post) =>
-            Keywords = keywords;
+        [JsonProperty("id")]
+        public int ID { get; set; }
 
-        [JsonProperty("keyword")]
-        public string Keywords { get; set; }
+        [JsonProperty("type")]
+        public EpType Type { get; set; }
+
+        [JsonProperty("name")]
+        public string? Name { get; set; }
+
+        [JsonProperty("name_cn")]
+        public string? NameCN { get; set; }
+
+        [JsonProperty("sort")]
+        public float? Sort { get; set; }
+
+        [JsonProperty("ep")]
+        public float? Ep { get; set; }
+
+        [JsonProperty("airdate")]
+        public string? Airdate { get; set; }
+
+        [JsonProperty("comment")]
+        public int Comment { get; set; }
+
+        [JsonProperty("duration")]
+        public string? Duration { get; set; }
+
+        [JsonProperty("desc")]
+        public string? Desc { get; set; }
+
+        [JsonProperty("disc")]
+        public int Disc { get; set; }
+
+        [JsonProperty("duration_seconds")]
+        public int DurationSeconds { get; set; }
+
+        [JsonProperty("subject_id")]
+        public SubjectID SubjectID { get; set; }
     }
 }

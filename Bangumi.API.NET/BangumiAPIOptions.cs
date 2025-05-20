@@ -56,6 +56,15 @@ namespace Bangumi.API.NET
         /// 的 User Agent。
         /// </remarks>
         public string? UserAgent { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool AllowAutoRedirect { get; set; } = true;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool UseCookie { get; set; } = true;
     }
 }

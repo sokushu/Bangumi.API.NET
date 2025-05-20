@@ -19,33 +19,16 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
-using Bangumi.API.NET.Requests.Abstractions;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
-
-namespace Bangumi.API.NET.Requests.Search
+namespace Bangumi.API.NET.Types
 {
-    public abstract class SearchRequestBase<TInput> : RequestBase<TInput>
+    public enum EpType
     {
-        protected SearchRequestBase(string methodname, HttpMethod? httpMethod = null) : base(methodname, httpMethod)
-        {
-        }
-
-        [JsonIgnore]
-        public int? Limit { get; set; }
-
-        [JsonIgnore]
-        public int? Offset { get; set; }
-
-        public override void MakeRequestQuery(Dictionary<string, string> query)
-        {
-            if (Limit.HasValue)
-                query.Add("limit", Limit.Value.ToString());
-            if (Offset.HasValue)
-                query.Add("offset", Offset.Value.ToString());
-        }
+        MainStory = 0,
+        SP = 1,
+        OP = 2,
+        ED = 3,
+        PV = 4,
+        MAD = 5,
+        Other = 6,
     }
 }

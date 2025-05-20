@@ -22,16 +22,31 @@
 using Bangumi.API.NET.Requests.Abstractions;
 using Bangumi.API.NET.Types;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Net.Http;
 
-namespace Bangumi.API.NET.Requests.Search
+namespace Bangumi.API.NET.Requests.Episodes
 {
-    public class SearchCharactersRequest : PagedRequestBase<Paged_Character>
+    public class GetEpisodesRequest : PagedRequestBase<Paged_Episode>
     {
-        public SearchCharactersRequest(string keywords) : base("search/characters", HttpMethod.Post) =>
-            Keywords = keywords;
+        public GetEpisodesRequest(SubjectID subjectID) : base("episodes", HttpMethod.Get)
+        {
+            SubjectID = subjectID;
+        }
 
-        [JsonProperty("keyword")]
-        public string Keywords { get; set; }
+        [JsonIgnore]
+        public EpType? Type { get; set; }
+
+        [JsonIgnore]
+        public SubjectID SubjectID { get; set; }
+
+        public override void MakeRequestQuery(Dictionary<string, string> query)
+        {
+            base.MakeRequestQuery(query);
+            if (Type.HasValue)
+                query.Add("type", ((int)Type.Value).ToString());
+            if (SubjectID != default)
+                query.Add("subject_id", SubjectID.ToString());
+        }
     }
 }

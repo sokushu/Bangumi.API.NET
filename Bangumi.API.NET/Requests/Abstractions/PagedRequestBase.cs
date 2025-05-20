@@ -19,19 +19,30 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
-using Bangumi.API.NET.Requests.Abstractions;
-using Bangumi.API.NET.Types;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.Net.Http;
 
-namespace Bangumi.API.NET.Requests.Search
+namespace Bangumi.API.NET.Requests.Abstractions
 {
-    public class SearchCharactersRequest : PagedRequestBase<Paged_Character>
+    public abstract class PagedRequestBase<TInput> : RequestBase<TInput>
     {
-        public SearchCharactersRequest(string keywords) : base("search/characters", HttpMethod.Post) =>
-            Keywords = keywords;
+        protected PagedRequestBase(string methodname, HttpMethod? httpMethod = null) : base(methodname, httpMethod)
+        {
+        }
 
-        [JsonProperty("keyword")]
-        public string Keywords { get; set; }
+        [JsonIgnore]
+        public int? Limit { get; set; }
+
+        [JsonIgnore]
+        public int? Offset { get; set; }
+
+        public override void MakeRequestQuery(Dictionary<string, string> query)
+        {
+            if (Limit.HasValue)
+                query.Add("limit", Limit.Value.ToString());
+            if (Offset.HasValue)
+                query.Add("offset", Offset.Value.ToString());
+        }
     }
 }
