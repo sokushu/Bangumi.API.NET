@@ -21,24 +21,11 @@
 //SOFTWARE.
 using Bangumi.API.NET;
 using Bangumi.API.NET.Types;
-using System.Net;
-using System.Threading.Tasks;
 
 internal class Program
 {
     private static async Task Main(string[] args)
     {
-        string? code;
-        using (var listener = new HttpListener())
-        {
-            listener.Prefixes.Add($"http://localhost:52531/");
-            listener.Start();
-            var context = await listener.GetContextAsync();
-            code = context.Request.QueryString.Get("code");
-            if (string.IsNullOrEmpty(code))
-                throw new Exception("Authorization code is missing.");
-        }
-
         IBangumiClient bangumiClient = new BangumiClient(new BangumiAPIOptions
         {
             UserAgent = "trim21/bangumi-episode-ics (https://github.com/Trim21/bangumi-episode-calendar)"
@@ -47,6 +34,8 @@ internal class Program
 
         var result001 = await bangumiClient.GetSubjectById(123456);
         var result002 = await bangumiClient.GetSubjectImageById(123456, ImagesType.Common);
+
+        await bangumiClient.GetEpisodeById();
     }
 
     private static async Task BangumiClient_ReceivedResponse(object? sender, HttpResponseMessage e)

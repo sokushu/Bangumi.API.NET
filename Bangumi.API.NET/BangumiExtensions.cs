@@ -25,6 +25,7 @@ using Bangumi.API.NET.Requests.Subjects;
 using Bangumi.API.NET.Responses;
 using Bangumi.API.NET.Types;
 using System;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Bangumi.API.NET
@@ -135,14 +136,18 @@ namespace Bangumi.API.NET
             await bangumiClient.ThrowIfNull().SendRequest(new GetSubjectByIdRequest(subjectID));
 
         /// <summary>
-        /// 
+        /// 获取条目图片
         /// </summary>
+        /// <remarks>
+        /// 获取URL地址，或者获取通过Encoding编码后的图片数据
+        /// </remarks>
         /// <param name="bangumiClient"></param>
         /// <param name="subjectID"></param>
         /// <param name="imageType"></param>
+        /// <param name="encoding"></param>
         /// <returns></returns>
-        public static async Task<string> GetSubjectImageById(this IBangumiClient bangumiClient, SubjectID subjectID, ImagesType imageType) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetSubjectImageByIdRequest(subjectID, imageType));
+        public static async Task<string> GetSubjectImageById(this IBangumiClient bangumiClient, SubjectID subjectID, ImagesType imageType, Encoding encoding) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetSubjectImageByIdRequest(subjectID, imageType, encoding));
 
         /// <summary>
         /// 
@@ -162,106 +167,344 @@ namespace Bangumi.API.NET
         public static async Task<RelatedCharacter> GetRelatedCharactersBySubjectId(this IBangumiClient bangumiClient, SubjectID subjectID) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetRelatedCharactersBySubjectIdRequest(subjectID));
 
-        //public static async Task GetRelatedSubjectsBySubjectId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetRelatedSubjectsBySubjectId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
 
-        //public static async Task GetEpisodes(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetEpisodes(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
 
-        //public static async Task GetEpisodeById(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetEpisodeById(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
 
-        //public static async Task GetCharacterById(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetCharacterById(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
 
-        //public static async Task GetCharacterImageById(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetCharacterImageById(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
 
-        //public static async Task GetRelatedSubjectsByCharacterId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetRelatedSubjectsByCharacterId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
 
-        //public static async Task GetRelatedPersonsByCharacterId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task CollectCharacterByCharacterIdAndUserId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task UncollectCharacterByCharacterIdAndUserId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetPersonById(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetPersonImageById(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetRelatedSubjectsByPersonId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetRelatedCharactersByPersonId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task CollectPersonByPersonIdAndUserId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task UncollectPersonByPersonIdAndUserId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetUserByName(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetUserAvatarByName(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetMyself(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetUserCollectionsByUsername(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetUserCollection(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task PostUserCollection(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task PatchUserCollection(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetUserSubjectEpisodeCollection(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task PatchUserSubjectEpisodeCollection(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetUserEpisodeCollection(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task PutUserEpisodeCollection(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetUserCharacterCollections(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetUserCharacterCollection(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetUserPersonCollections(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetUserPersonCollection(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetPersonRevisions(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetPersonRevisionByRevisionId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetCharacterRevisions(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetCharacterRevisionByRevisionId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetSubjectRevisions(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetSubjectRevisionByRevisionId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetEpisodeRevisions(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetEpisodeRevisionByRevisionId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task NewIndex(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetIndexById(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task EditIndexById(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task GetIndexSubjectsByIndexId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task AddSubjectToIndexByIndexId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task EditIndexSubjectsByIndexIdAndSubjectID(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task DelelteSubjectFromIndexByIndexIdAndSubjectID(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task CollectIndexByIndexIdAndUserId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
-        //public static async Task UncollectIndexByIndexIdAndUserId(this IBangumiClient bangumiClient) =>
-        //    await bangumiClient.ThrowIfNull().SendRequest();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetRelatedPersonsByCharacterId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task CollectCharacterByCharacterIdAndUserId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task UncollectCharacterByCharacterIdAndUserId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetPersonById(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetPersonImageById(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetRelatedSubjectsByPersonId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetRelatedCharactersByPersonId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task CollectPersonByPersonIdAndUserId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task UncollectPersonByPersonIdAndUserId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetUserByName(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetUserAvatarByName(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetMyself(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetUserCollectionsByUsername(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetUserCollection(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task PostUserCollection(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task PatchUserCollection(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetUserSubjectEpisodeCollection(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task PatchUserSubjectEpisodeCollection(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetUserEpisodeCollection(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task PutUserEpisodeCollection(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetUserCharacterCollections(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetUserCharacterCollection(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetUserPersonCollections(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetUserPersonCollection(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetPersonRevisions(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetPersonRevisionByRevisionId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetCharacterRevisions(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetCharacterRevisionByRevisionId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetSubjectRevisions(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetSubjectRevisionByRevisionId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetEpisodeRevisions(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetEpisodeRevisionByRevisionId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task NewIndex(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetIndexById(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task EditIndexById(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task GetIndexSubjectsByIndexId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task AddSubjectToIndexByIndexId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task EditIndexSubjectsByIndexIdAndSubjectID(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task DelelteSubjectFromIndexByIndexIdAndSubjectID(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task CollectIndexByIndexIdAndUserId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bangumiClient"></param>
+        /// <returns></returns>
+        public static async Task UncollectIndexByIndexIdAndUserId(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
         #endregion
     }
 }
