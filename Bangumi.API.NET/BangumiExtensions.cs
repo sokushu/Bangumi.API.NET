@@ -223,16 +223,16 @@ namespace Bangumi.API.NET
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetRelatedSubjectsByCharacterId(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task<RelatedSubject> GetRelatedSubjectsByCharacterId(this IBangumiClient bangumiClient, int character_id) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetRelatedSubjectsByCharacterIdRequest(character_id));
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetRelatedPersonsByCharacterId(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task GetRelatedPersonsByCharacterId(this IBangumiClient bangumiClient, int character_id) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetRelatedPersonsByCharacterIdRequest(character_id));
 
         /// <summary>
         /// 
