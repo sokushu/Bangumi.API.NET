@@ -19,27 +19,16 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
-using Bangumi.API.NET;
+using Bangumi.API.NET.Requests.Abstractions;
 using Bangumi.API.NET.Types;
-using System.Diagnostics;
+using System.Net.Http;
 
-internal class Program
+namespace Bangumi.API.NET.Requests.Persons
 {
-    private static async Task Main(string[] args)
+    public class GetPersonByIdRequest : RequestBase<Person>
     {
-        IBangumiClient bangumiClient = new BangumiClient(new BangumiAPIOptions
+        public GetPersonByIdRequest(int person_id) : base($"persons/{person_id}", HttpMethod.Get)
         {
-            UserAgent = "trim21/bangumi-episode-ics (https://github.com/Trim21/bangumi-episode-calendar)"
-        });
-        bangumiClient.ReceivedResponse += BangumiClient_ReceivedResponse;
-
-        var result001 = await bangumiClient.GetEpisodes(123456);
-        var result002 = await bangumiClient.GetSubjectImageById(123456, ImagesType.Common);
-    }
-
-    private static async Task BangumiClient_ReceivedResponse(object? sender, HttpResponseMessage e)
-    {
-        var json = await e.Content.ReadAsStringAsync();
-        Debug.WriteLine($"Received response: {e.StatusCode} - {json}");
+        }
     }
 }

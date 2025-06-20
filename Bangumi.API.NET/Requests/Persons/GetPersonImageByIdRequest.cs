@@ -30,25 +30,34 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bangumi.API.NET.Requests.Subjects
+namespace Bangumi.API.NET.Requests.Persons
 {
-    public class GetSubjectImageByIdRequest : RequestBase<string>
+    public class GetPersonImageByIdRequest : RequestBase<string>
     {
-        [JsonIgnore]
-        private readonly Encoding _encoding = Encoding.UTF8;
-
-        public GetSubjectImageByIdRequest(SubjectID subjectID, ImagesType imageType, Encoding? encoding = null) : base($"subjects/{subjectID}/image", HttpMethod.Get)
+        public GetPersonImageByIdRequest(int person_id, ImagesType imagesType) : base($"persons/{person_id}/image", HttpMethod.Get)
         {
-            ImageType = imageType;
-            if (encoding != null)
-                _encoding = encoding;
+            Type = imagesType;
         }
 
         [JsonIgnore]
-        public ImagesType ImageType { get; set; }
+        public ImagesType Type { get; set; }
 
-        public override void MakeRequestQuery(Dictionary<string, string> query) =>
-            query.Add("type", ImageType.ToString().ToLower());
+        [JsonIgnore]
+        private Encoding _encoding = Encoding.UTF8;
+        public Encoding Encoding
+        {
+            get => _encoding;
+            set
+            {
+                if (value != null)
+                    _encoding = value;
+            }
+        }
+
+        public override void MakeRequestQuery(Dictionary<string, string> query)
+        {
+            query.Add("type", Type.ToString().ToLower());
+        }
 
         public override async Task<string> ParseResponse(HttpResponseMessage httpResponseMessage)
         {

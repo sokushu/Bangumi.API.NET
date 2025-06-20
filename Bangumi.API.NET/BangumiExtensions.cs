@@ -22,6 +22,7 @@
 using Bangumi.API.NET.Requests;
 using Bangumi.API.NET.Requests.Characters;
 using Bangumi.API.NET.Requests.Episodes;
+using Bangumi.API.NET.Requests.Persons;
 using Bangumi.API.NET.Requests.Search;
 using Bangumi.API.NET.Requests.Subjects;
 using Bangumi.API.NET.Responses;
@@ -239,29 +240,33 @@ namespace Bangumi.API.NET
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task CollectCharacterByCharacterIdAndUserId(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task<bool> CollectCharacterByCharacterIdAndUserId(this IBangumiClient bangumiClient, int id) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new CollectCharacterByCharacterIdAndUserIdRequest(id));
+        
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task UncollectCharacterByCharacterIdAndUserId(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task UncollectCharacterByCharacterIdAndUserId(this IBangumiClient bangumiClient, int id) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new UncollectCharacterByCharacterIdAndUserIdRequest(id));
+        
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetPersonById(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task GetPersonById(this IBangumiClient bangumiClient, int id) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetPersonByIdRequest(id));
+        
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetPersonImageById(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task GetPersonImageById(this IBangumiClient bangumiClient, int id) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetPersonByIdRequest(id));
+        
         /// <summary>
         /// 
         /// </summary>
@@ -269,6 +274,7 @@ namespace Bangumi.API.NET
         /// <returns></returns>
         public static async Task GetRelatedSubjectsByPersonId(this IBangumiClient bangumiClient) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        
         /// <summary>
         /// 
         /// </summary>
@@ -276,6 +282,7 @@ namespace Bangumi.API.NET
         /// <returns></returns>
         public static async Task GetRelatedCharactersByPersonId(this IBangumiClient bangumiClient) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        
         /// <summary>
         /// 
         /// </summary>
@@ -283,6 +290,7 @@ namespace Bangumi.API.NET
         /// <returns></returns>
         public static async Task CollectPersonByPersonIdAndUserId(this IBangumiClient bangumiClient) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        
         /// <summary>
         /// 
         /// </summary>
@@ -290,6 +298,7 @@ namespace Bangumi.API.NET
         /// <returns></returns>
         public static async Task UncollectPersonByPersonIdAndUserId(this IBangumiClient bangumiClient) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        
         /// <summary>
         /// 
         /// </summary>
@@ -297,6 +306,7 @@ namespace Bangumi.API.NET
         /// <returns></returns>
         public static async Task GetUserByName(this IBangumiClient bangumiClient) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        
         /// <summary>
         /// 
         /// </summary>
@@ -451,6 +461,7 @@ namespace Bangumi.API.NET
         /// <returns></returns>
         public static async Task GetEpisodeRevisionByRevisionId(this IBangumiClient bangumiClient) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        
         /// <summary>
         /// 
         /// </summary>
@@ -458,6 +469,7 @@ namespace Bangumi.API.NET
         /// <returns></returns>
         public static async Task NewIndex(this IBangumiClient bangumiClient) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        
         /// <summary>
         /// 
         /// </summary>
@@ -465,6 +477,7 @@ namespace Bangumi.API.NET
         /// <returns></returns>
         public static async Task GetIndexById(this IBangumiClient bangumiClient) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        
         /// <summary>
         /// 
         /// </summary>
@@ -472,6 +485,7 @@ namespace Bangumi.API.NET
         /// <returns></returns>
         public static async Task EditIndexById(this IBangumiClient bangumiClient) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        
         /// <summary>
         /// 
         /// </summary>
@@ -479,6 +493,7 @@ namespace Bangumi.API.NET
         /// <returns></returns>
         public static async Task GetIndexSubjectsByIndexId(this IBangumiClient bangumiClient) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        
         /// <summary>
         /// 
         /// </summary>
@@ -486,6 +501,7 @@ namespace Bangumi.API.NET
         /// <returns></returns>
         public static async Task AddSubjectToIndexByIndexId(this IBangumiClient bangumiClient) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        
         /// <summary>
         /// 
         /// </summary>
@@ -493,6 +509,7 @@ namespace Bangumi.API.NET
         /// <returns></returns>
         public static async Task EditIndexSubjectsByIndexIdAndSubjectID(this IBangumiClient bangumiClient) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        
         /// <summary>
         /// 
         /// </summary>

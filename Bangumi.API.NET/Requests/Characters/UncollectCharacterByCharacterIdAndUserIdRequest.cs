@@ -19,27 +19,27 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
-using Bangumi.API.NET;
-using Bangumi.API.NET.Types;
-using System.Diagnostics;
+using Bangumi.API.NET.Requests.Abstractions;
+using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
-internal class Program
+namespace Bangumi.API.NET.Requests.Characters
 {
-    private static async Task Main(string[] args)
+    public class UncollectCharacterByCharacterIdAndUserIdRequest : RequestBase<bool>
     {
-        IBangumiClient bangumiClient = new BangumiClient(new BangumiAPIOptions
+        public UncollectCharacterByCharacterIdAndUserIdRequest(int character_id) : base($"characters/{character_id}/collect", HttpMethod.Delete)
         {
-            UserAgent = "trim21/bangumi-episode-ics (https://github.com/Trim21/bangumi-episode-calendar)"
-        });
-        bangumiClient.ReceivedResponse += BangumiClient_ReceivedResponse;
+        }
 
-        var result001 = await bangumiClient.GetEpisodes(123456);
-        var result002 = await bangumiClient.GetSubjectImageById(123456, ImagesType.Common);
-    }
+        public override async Task<bool> ParseResponse(HttpResponseMessage httpResponseMessage)
+        {
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NoContent)
+                return true;
 
-    private static async Task BangumiClient_ReceivedResponse(object? sender, HttpResponseMessage e)
-    {
-        var json = await e.Content.ReadAsStringAsync();
-        Debug.WriteLine($"Received response: {e.StatusCode} - {json}");
+            return await Task.FromResult(false);
+        }
     }
 }
