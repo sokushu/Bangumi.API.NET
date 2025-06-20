@@ -20,16 +20,23 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 using Bangumi.API.NET.Requests.Abstractions;
-using Bangumi.API.NET.Types;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Bangumi.API.NET.Requests.Persons
 {
-    public class GetPersonByIdRequest : RequestBase<Person>
+    internal class CollectPersonByPersonIdAndUserIdRequest : RequestBase<bool>
     {
-        public GetPersonByIdRequest(int person_id) : base($"persons/{person_id}", HttpMethod.Get)
+        public CollectPersonByPersonIdAndUserIdRequest(int person_id) : base($"persons/{person_id}/collect", HttpMethod.Post)
         {
+        }
 
+        public override Task<bool> ParseResponse(HttpResponseMessage httpResponseMessage)
+        {
+            if (httpResponseMessage.StatusCode == System.Net.HttpStatusCode.NoContent)
+                return Task.FromResult(true);
+            else
+                return Task.FromResult(false);
         }
     }
 }

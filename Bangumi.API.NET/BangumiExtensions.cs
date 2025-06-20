@@ -28,9 +28,21 @@ using Bangumi.API.NET.Requests.Subjects;
 using Bangumi.API.NET.Responses;
 using Bangumi.API.NET.Types;
 using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-
+// BangumiSharp - 用 C# 召唤 Bangumi API 的魔法库
+//爱用C#的有福了！
+//在遥远的二次元星系，Bangumi API 化身为神秘的能量源，唯有掌握 C# 之力的勇者才能召唤。
+//现在，我用代码织成魔法阵，召唤出 Bangumi C# API 库——
+//让你用一行 await，穿梭番剧宇宙，
+//用一行 lambda，收集你的本命角色，
+//用一行 LINQ，筛选你的追番清单。
+//别再用 Postman 手搓请求了，
+//让 BangumiSharp 带你体验“用 C# 拯救世界”的快乐！
+//快来试试，和我一起用代码点亮二次元吧！
 namespace Bangumi.API.NET
 {
     public static class BangumiExtensions
@@ -232,7 +244,7 @@ namespace Bangumi.API.NET
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetRelatedPersonsByCharacterId(this IBangumiClient bangumiClient, int character_id) =>
+        public static async Task<CharacterPerson> GetRelatedPersonsByCharacterId(this IBangumiClient bangumiClient, int character_id) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetRelatedPersonsByCharacterIdRequest(character_id));
 
         /// <summary>
@@ -248,7 +260,7 @@ namespace Bangumi.API.NET
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task UncollectCharacterByCharacterIdAndUserId(this IBangumiClient bangumiClient, int id) =>
+        public static async Task<bool> UncollectCharacterByCharacterIdAndUserId(this IBangumiClient bangumiClient, int id) =>
             await bangumiClient.ThrowIfNull().SendRequest(new UncollectCharacterByCharacterIdAndUserIdRequest(id));
         
         /// <summary>
@@ -256,7 +268,7 @@ namespace Bangumi.API.NET
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetPersonById(this IBangumiClient bangumiClient, int id) =>
+        public static async Task<Person> GetPersonById(this IBangumiClient bangumiClient, int id) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetPersonByIdRequest(id));
         
         /// <summary>
@@ -264,70 +276,93 @@ namespace Bangumi.API.NET
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetPersonImageById(this IBangumiClient bangumiClient, int id) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetPersonByIdRequest(id));
+        public static async Task<string> GetPersonImageById(this IBangumiClient bangumiClient, int id, ImagesType imagesType) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetPersonImageByIdRequest(id, imagesType));
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetRelatedSubjectsByPersonId(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task<List<RelatedSubject>> GetRelatedSubjectsByPersonId(this IBangumiClient bangumiClient, int id) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetRelatedSubjectsByPersonIdRequest(id));
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetRelatedCharactersByPersonId(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task<CharacterPerson> GetRelatedCharactersByPersonId(this IBangumiClient bangumiClient, int id) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetRelatedCharactersByPersonIdRequest(id));
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task CollectPersonByPersonIdAndUserId(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task<bool> CollectPersonByPersonIdAndUserId(this IBangumiClient bangumiClient, int id) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new CollectPersonByPersonIdAndUserIdRequest(id));
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task UncollectPersonByPersonIdAndUserId(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task UncollectPersonByPersonIdAndUserId(this IBangumiClient bangumiClient, int person_id) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new CheckFunctionRequest($"persons/{person_id}/collect", HttpMethod.Delete)
+            {
+                 HttpStatusCodes = new HashSet<HttpStatusCode>
+                 {
+                     HttpStatusCode.NoContent,
+                 },
+            });
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetUserByName(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task GetUserByName(this IBangumiClient bangumiClient, string username) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new FunctionRequest<User>($"users/{username}", HttpMethod.Get));
         
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetUserAvatarByName(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task GetUserAvatarByName(this IBangumiClient bangumiClient, string username, ImagesType imagesType) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new GetPhotoFunctionRequest($"users/{username}/avatar", HttpMethod.Get)
+            {
+                MakeRequestQueryAction = (query) =>
+                {
+                    query.Add("type", imagesType.ToString().ToLower());
+                }
+            });
+        
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetMyself(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task<User> GetMyself(this IBangumiClient bangumiClient) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new FunctionRequest<User>("me", HttpMethod.Get));
+        
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetUserCollectionsByUsername(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task GetUserCollectionsByUsername(this IBangumiClient bangumiClient, string username, SubjectType? subjectType = null, SubjectCollectionType? collectionType = null) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new FunctionRequest<Paged_UserCollection>($"users/{username}/collections", HttpMethod.Get)
+            {
+                MakeRequestQueryAction = (query) =>
+                {
+                    if (subjectType != null)
+                        query.Add("subject_type", subjectType.ToString().ToLower());
+                    if (collectionType != null)
+                        query.Add("type", collectionType.ToString().ToLower());
+                }
+            });
         /// <summary>
         /// 
         /// </summary>

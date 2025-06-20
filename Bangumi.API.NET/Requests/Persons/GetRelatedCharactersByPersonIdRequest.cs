@@ -25,11 +25,10 @@ using System.Net.Http;
 
 namespace Bangumi.API.NET.Requests.Persons
 {
-    public class GetPersonByIdRequest : RequestBase<Person>
+    internal class GetRelatedCharactersByPersonIdRequest : RequestBase<CharacterPerson>
     {
-        public GetPersonByIdRequest(int person_id) : base($"persons/{person_id}", HttpMethod.Get)
+        public GetRelatedCharactersByPersonIdRequest(int person_id) : base($"persons/{person_id}/characters", HttpMethod.Get)
         {
-
         }
     }
 }

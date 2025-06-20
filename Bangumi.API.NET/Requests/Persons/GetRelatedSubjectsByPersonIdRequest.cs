@@ -21,15 +21,15 @@
 //SOFTWARE.
 using Bangumi.API.NET.Requests.Abstractions;
 using Bangumi.API.NET.Types;
+using System.Collections.Generic;
 using System.Net.Http;
 
 namespace Bangumi.API.NET.Requests.Persons
 {
-    public class GetPersonByIdRequest : RequestBase<Person>
+    internal class GetRelatedSubjectsByPersonIdRequest : RequestBase<List<RelatedSubject>>
     {
-        public GetPersonByIdRequest(int person_id) : base($"persons/{person_id}", HttpMethod.Get)
+        public GetRelatedSubjectsByPersonIdRequest(int person_id) : base($"persons/{person_id}/subjects", HttpMethod.Get)
         {
-
         }
     }
 }

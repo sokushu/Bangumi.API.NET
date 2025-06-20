@@ -20,16 +20,35 @@
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
 using Bangumi.API.NET.Requests.Abstractions;
-using Bangumi.API.NET.Types;
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 
-namespace Bangumi.API.NET.Requests.Persons
+namespace Bangumi.API.NET.Requests
 {
-    public class GetPersonByIdRequest : RequestBase<Person>
+    internal class FunctionRequest<TResult> : RequestBase<TResult>
     {
-        public GetPersonByIdRequest(int person_id) : base($"persons/{person_id}", HttpMethod.Get)
-        {
+        public Action<Dictionary<string, string>>? MakeRequestQueryAction { get; set; }
 
+        public Func<HttpResponseMessage, Task<TResult>> ParseResponseAction { get; set; }
+
+        public FunctionRequest(string methodname, HttpMethod? httpMethod = null) : base(methodname, httpMethod)
+        {
+            ParseResponseAction = (httpResponseMessage) =>
+            {
+                return base.ParseResponse(httpResponseMessage);
+            };
+        }
+
+        public override async Task<TResult> ParseResponse(HttpResponseMessage httpResponseMessage)
+        {
+            return await ParseResponseAction(httpResponseMessage);
+        }
+
+        public override void MakeRequestQuery(Dictionary<string, string> query)
+        {
+            MakeRequestQueryAction?.Invoke(query);
         }
     }
 }

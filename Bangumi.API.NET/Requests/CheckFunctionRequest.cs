@@ -19,17 +19,25 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
-using Bangumi.API.NET.Requests.Abstractions;
-using Bangumi.API.NET.Types;
+using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 
-namespace Bangumi.API.NET.Requests.Persons
+namespace Bangumi.API.NET.Requests
 {
-    public class GetPersonByIdRequest : RequestBase<Person>
+    internal class CheckFunctionRequest : FunctionRequest<bool>
     {
-        public GetPersonByIdRequest(int person_id) : base($"persons/{person_id}", HttpMethod.Get)
-        {
+        public HashSet<HttpStatusCode>? HttpStatusCodes { get; set; }
 
+        public CheckFunctionRequest(string methodname, HttpMethod? httpMethod = null) : base(methodname, httpMethod)
+        {
+            ParseResponseAction = async (httpResponseMessage) =>
+            {
+                if (HttpStatusCodes == null)
+                    return httpResponseMessage.StatusCode == HttpStatusCode.OK;
+                return await Task.FromResult(HttpStatusCodes.Contains(httpResponseMessage.StatusCode));
+            };
         }
     }
 }

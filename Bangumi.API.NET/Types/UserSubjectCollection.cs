@@ -19,17 +19,16 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
-using Bangumi.API.NET.Requests.Abstractions;
-using Bangumi.API.NET.Types;
-using System.Net.Http;
+using Newtonsoft.Json;
 
-namespace Bangumi.API.NET.Requests.Persons
+namespace Bangumi.API.NET.Types
 {
-    public class GetPersonByIdRequest : RequestBase<Person>
+    public class UserSubjectCollection
     {
-        public GetPersonByIdRequest(int person_id) : base($"persons/{person_id}", HttpMethod.Get)
-        {
+        [JsonProperty("subject_id")]
+        public SubjectID SubjectID { get; set; }
 
-        }
+        [JsonProperty("subject_type")]
+        public SubjectType SubjectType { get; set; }
     }
 }
