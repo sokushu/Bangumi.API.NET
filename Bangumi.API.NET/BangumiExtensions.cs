@@ -387,7 +387,7 @@ namespace Bangumi.API.NET
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetUserCollectionsByUsername(this IBangumiClient bangumiClient, string username, SubjectType? subjectType = null, SubjectCollectionType? collectionType = null) =>
+        public static async Task<Paged_UserCollection> GetUserCollectionsByUsername(this IBangumiClient bangumiClient, string username, SubjectType? subjectType = null, SubjectCollectionType? collectionType = null) =>
             await bangumiClient.ThrowIfNull().SendRequest(new FunctionRequest<Paged_UserCollection>($"users/{username}/collections", HttpMethod.Get)
             {
                 MakeRequestQueryAction = (query) =>
@@ -403,14 +403,17 @@ namespace Bangumi.API.NET
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task GetUserCollection(this IBangumiClient bangumiClient) =>
-            await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
+        public static async Task<UserSubjectCollection> GetUserCollection(this IBangumiClient bangumiClient, string username, SubjectID subject_id) =>
+            await bangumiClient.ThrowIfNull().SendRequest(new FunctionRequest<UserSubjectCollection>($"users/{username}/collections/{subject_id}", HttpMethod.Get)
+            {
+
+            });
         /// <summary>
         /// 
         /// </summary>
         /// <param name="bangumiClient"></param>
         /// <returns></returns>
-        public static async Task PostUserCollection(this IBangumiClient bangumiClient) =>
+        public static async Task PostUserCollection(this IBangumiClient bangumiClient, SubjectID subject_id) =>
             await bangumiClient.ThrowIfNull().SendRequest(new GetCalendarRequest());
         /// <summary>
         /// 
