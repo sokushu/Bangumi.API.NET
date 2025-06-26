@@ -19,13 +19,10 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
-using Bangumi.API.NET.Requests.Abstractions;
-using Bangumi.API.NET.Responses;
-
 namespace Bangumi.API.NET.Requests
 {
-    public class GetCalendarRequest : RequestBase<GetCalendarResponses>
+    internal static class RequestURL
     {
-        public GetCalendarRequest() : base("calendar") { }
+        public const string BaseUrl = "https://api.bgm.tv";
     }
 }

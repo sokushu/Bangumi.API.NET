@@ -43,18 +43,10 @@ namespace Bangumi.API.NET.Requests.Abstractions
         [JsonIgnore]
         public string MethodName { get; }
 
-        [JsonIgnore]
-        public string ApiVersion { get; set; } = "v0";
-
         public virtual string GetRequestURL()
         {
-            var apiVersion = string.Empty;
-            if (!string.IsNullOrEmpty(ApiVersion))
-                apiVersion = $"{ApiVersion}/";
-            var url = $"{apiVersion}{MethodName}";
-
-            var sb = new StringBuilder(url);
-            var dictionary = new Dictionary<string, string>();
+            var sb = new StringBuilder(MethodName);
+            var dictionary = new QueryDictionary();
             MakeRequestQuery(dictionary);
             var list = dictionary.ToList();
             if (list.Count > 0)
@@ -66,9 +58,9 @@ namespace Bangumi.API.NET.Requests.Abstractions
             return sb.ToString();
         }
 
-        public virtual void MakeRequestQuery(Dictionary<string, string> query) { }
+        public virtual void MakeRequestQuery(QueryDictionary query) { }
 
-        public HttpContent? ToHttpContent()
+        public virtual HttpContent? ToHttpContent()
         {
             var requestJson = JsonConvert.SerializeObject(this, GetType(), settings: new JsonSerializerSettings
             {

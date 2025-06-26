@@ -30,8 +30,7 @@ namespace Bangumi.API.NET.Requests
 {
     public class SearchSubjectByKeywordsRequest : RequestBase<SearchSubjectByKeywordsResponses>
     {
-        public SearchSubjectByKeywordsRequest(string keywords) : base($"search/subject/{keywords}", HttpMethod.Get) =>
-            ApiVersion = string.Empty;
+        public SearchSubjectByKeywordsRequest(string keywords) : base($"search/subject/{keywords}", HttpMethod.Get) { }
 
         /// <summary>
         /// 条目类型

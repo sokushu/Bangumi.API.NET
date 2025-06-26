@@ -30,34 +30,102 @@ using static Bangumi.API.NET.IBangumiClient;
 
 namespace Bangumi.API.NET
 {
+    /// <summary>
+    /// Provides functionality for interacting with the Bangumi API, including sending requests, handling responses, and
+    /// managing authentication.
+    /// </summary>
+    /// <remarks>The <see cref="BangumiClient"/> class is designed to facilitate communication with the
+    /// Bangumi API. It supports customizable options such as timeout settings, base URL, and user agent configuration.
+    /// Events are provided to allow handling of HTTP requests and responses, enabling advanced scenarios such as
+    /// logging or modifying requests before they are sent.  This class is thread-safe for concurrent use, but care
+    /// should be taken when modifying shared state such as event handlers or options.</remarks>
     public class BangumiClient : IBangumiClient
     {
-        public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(30);
+        /// <summary>
+        /// Gets or sets the timeout duration for HTTP requests.
+        /// </summary>
+        public TimeSpan Timeout
+        {
+            get
+            {
+                return HttpClientInstance.Timeout;
+            }
+            set
+            {
+                if (value <= TimeSpan.Zero)
+                    throw new ArgumentOutOfRangeException(nameof(value), "Timeout must be greater than zero.");
+                HttpClientInstance.Timeout = value;
+            }
+        }
 
-        private HttpClient HttpClient { get; }
+        /// <summary>
+        /// Gets the underlying <see cref="HttpClient"/> instance used for making HTTP requests.
+        /// </summary>
+        private HttpClient HttpClientInstance { get; }
 
-        private HttpClientHandler HttpClientHandler { get; }
+        /// <summary>
+        /// Gets the instance of <see cref="HttpClientHandler"/> used to configure HTTP request handling.
+        /// </summary>
+        private HttpClientHandler HttpClientHandlerInstance { get; }
 
-        private BangumiAPIOptions? Options { get; }
+        /// <summary>
+        /// Gets the current instance of <see cref="BangumiAPIOptions"/> used for configuring API behavior.
+        /// </summary>
+        private BangumiAPIOptions? OptionsInstance { get; }
 
-        private readonly CancellationTokenSource CancellationTokenSource;
+        /// <summary>
+        /// Represents a source for cancellation tokens that can be used to signal cancellation of asynchronous
+        /// operations.
+        /// </summary>
+        /// <remarks>This field is intended for internal use to manage cancellation of tasks or
+        /// operations. It provides a centralized mechanism to issue cancellation requests.</remarks>
+        private readonly CancellationTokenSource _CancellationTokenSource;
 
+        /// <summary>
+        /// Occurs before an HTTP request is sent, allowing subscribers to inspect or modify the request.
+        /// </summary>
+        /// <remarks>This event is triggered asynchronously before the HTTP request is dispatched. 
+        /// Subscribers can use this event to modify headers, adjust the request content, or log details. Ensure that
+        /// any modifications to the <see cref="HttpRequestMessage"/> are thread-safe.</remarks>
         public event AsyncEventHandler<HttpRequestMessage>? SendingRequest;
+
+        /// <summary>
+        /// Occurs when an HTTP response is received.
+        /// </summary>
+        /// <remarks>This event is triggered after an HTTP request is completed and a response is
+        /// received. Subscribers can use this event to process the response or perform additional actions. The event
+        /// handler must be asynchronous and return a <see cref="Task"/>.</remarks>
         public event AsyncEventHandler<HttpResponseMessage>? ReceivedResponse;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BangumiClient"/> class, configured with the specified API
+        /// options.
+        /// </summary>
+        /// <remarks>The <see cref="BangumiClient"/> class provides functionality to interact with the
+        /// Bangumi API. It uses an <see cref="HttpClient"/> internally to handle HTTP requests and responses.  If
+        /// <paramref name="options"/> is provided, the following settings are applied: <list type="bullet">
+        /// <item><description><see cref="BangumiAPIOptions.AllowAutoRedirect"/> determines whether HTTP redirects are
+        /// automatically followed.</description></item> <item><description><see cref="BangumiAPIOptions.UseCookie"/>
+        /// specifies whether cookies are used for requests.</description></item> <item><description><see
+        /// cref="BangumiAPIOptions.BaseURL"/> sets the base URL for API requests.</description></item>
+        /// <item><description><see cref="BangumiAPIOptions.UserAgent"/> sets the User-Agent header for
+        /// requests.</description></item> </list> If no options are provided, default values are used for these
+        /// settings.</remarks>
+        /// <param name="options">An optional <see cref="BangumiAPIOptions"/> object that specifies configuration settings for the client. If
+        /// null, default settings are used.</param>
         public BangumiClient(BangumiAPIOptions? options = null)
         {
-            Options = options;
+            OptionsInstance = options;
 
-            HttpClientHandler = new HttpClientHandler()
+            HttpClientHandlerInstance = new HttpClientHandler()
             {
-                AllowAutoRedirect = Options?.AllowAutoRedirect ?? false,
+                AllowAutoRedirect = OptionsInstance?.AllowAutoRedirect ?? false,
                 AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
-                UseCookies = Options?.UseCookie ?? true,
+                UseCookies = OptionsInstance?.UseCookie ?? true,
                 CookieContainer = new CookieContainer(),
             };
 
-            HttpClient = new HttpClient(HttpClientHandler)
+            HttpClientInstance = new HttpClient(HttpClientHandlerInstance)
             {
                 Timeout = Timeout,
             };
@@ -66,14 +134,30 @@ namespace Bangumi.API.NET
 
             string baseAddress;
             string userAgent;
-            if (!string.IsNullOrEmpty(baseAddress = Options?.BaseURL ?? string.Empty))
-                HttpClient.BaseAddress = new Uri(baseAddress);
-            if (!string.IsNullOrEmpty(userAgent = Options?.UserAgent ?? string.Empty))
-                HttpClient.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
+            if (!string.IsNullOrEmpty(baseAddress = OptionsInstance?.BaseURL ?? string.Empty))
+                HttpClientInstance.BaseAddress = new Uri(baseAddress);
+            if (!string.IsNullOrEmpty(userAgent = OptionsInstance?.UserAgent ?? string.Empty))
+                HttpClientInstance.DefaultRequestHeaders.UserAgent.ParseAdd(userAgent);
 
-            CancellationTokenSource = new CancellationTokenSource();
+            _CancellationTokenSource = new CancellationTokenSource();
         }
 
+        /// <summary>
+        /// Sends an HTTP request based on the specified <see cref="IRequest{TResponse}"/> and returns the response.
+        /// </summary>
+        /// <remarks>This method sends an HTTP request using the provided <paramref name="request"/>
+        /// object, which must implement <see cref="IRequest{TResponse}"/>. The method handles common HTTP errors by
+        /// throwing specific exceptions for certain status codes. If the request is successful, the response is parsed
+        /// using the <see cref="IRequest{TResponse}.ParseResponse"/> method.</remarks>
+        /// <typeparam name="TResponse">The type of the response expected from the request.</typeparam>
+        /// <param name="request">The request object containing the details of the HTTP request to be sent. Cannot be <see langword="null"/>.</param>
+        /// <param name="cancellationToken">A token to monitor for cancellation requests. Defaults to <see cref="CancellationToken.None"/> if not
+        /// provided.</param>
+        /// <returns>A task representing the asynchronous operation. The task result contains the parsed response of type
+        /// <typeparamref name="TResponse"/>.</returns>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="request"/> is <see langword="null"/>.</exception>
+        /// <exception cref="TimeoutException">Thrown if the request times out.</exception>
+        /// <exception cref="Exception"></exception>
         public virtual async Task<TResponse> SendRequest<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
             if (request == null)
@@ -81,7 +165,7 @@ namespace Bangumi.API.NET
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, CancellationTokenSource.Token);
+            var tokenSource = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _CancellationTokenSource.Token);
 
             var url = request.GetRequestURL();
             var requestMessage = request.ToHttpContent();
@@ -97,7 +181,7 @@ namespace Bangumi.API.NET
             HttpResponseMessage responseMessage;
             try
             {
-                responseMessage = await HttpClient.SendAsync(httpRequestMessage, tokenSource.Token);
+                responseMessage = await HttpClientInstance.SendAsync(httpRequestMessage, tokenSource.Token);
 
                 if (ReceivedResponse != null)
                     await ReceivedResponse.Invoke(this, responseMessage);

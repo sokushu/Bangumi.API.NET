@@ -19,6 +19,8 @@
 //LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //SOFTWARE.
+using Bangumi.API.NET.Requests;
+
 namespace Bangumi.API.NET
 {
     public class BangumiAPIOptions
@@ -29,7 +31,7 @@ namespace Bangumi.API.NET
         /// <remarks>
         /// 可以使用自己的 API 服务器，或者使用代理服务器。<br/>
         /// </remarks>
-        public string BaseURL { get; set; } = "https://api.bgm.tv/";
+        public string BaseURL { get; set; } = RequestURL.BaseUrl;
 
         /// <summary>
         /// 非浏览器的 API 使用者请指定一个带有开发者个人 ID 和应用名称的 User Agent。<br/>
